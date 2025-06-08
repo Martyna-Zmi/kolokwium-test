@@ -14,11 +14,15 @@ RUN apt-get update && apt-get install -y \
     && npm install -g npm \
     && apt-get clean
 
-ENV SONAR_SCANNER_VERSION=4.8.0.2856
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
+ENV SONAR_SCANNER_VERSION=4.8.0.2856
 RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip \
     && unzip sonar-scanner.zip -d /opt \
     && rm sonar-scanner.zip \
     && ln -s /opt/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
+
 ENV PATH="/usr/local/bin:$PATH"
-RUN node -v && npm -v && git --version && jq --version && sonar-scanner -v
+
+RUN java -version && sonar-scanner -v
