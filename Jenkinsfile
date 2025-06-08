@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'martyna0901/custom-jenkins-build-agent:1.0.3'
+            image 'martyna0901/custom-jenkins-build-agent:1.0.4'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock --network sonarqube-config_ci_network -u root'
         }
     }
