@@ -21,7 +21,8 @@ ENV SONAR_SCANNER_VERSION=4.8.0.2856
 RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip \
     && unzip sonar-scanner.zip -d /opt \
     && rm sonar-scanner.zip \
-    && ln -s /opt/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
+    && ln -s /opt/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner \
+    && echo "sonar.java.path=$JAVA_HOME/bin/java" >> /opt/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/conf/sonar-scanner.properties
 
 ENV PATH="/usr/local/bin:$PATH"
 
