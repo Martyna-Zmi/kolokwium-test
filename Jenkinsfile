@@ -38,16 +38,9 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh """
-                        npm install
-                        sonar-scanner \
-                        -Dsonar.projectKey=kolokwium-api \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.login=$SONAR_TOKEN
-                        """
-                    }
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh 'sonar-scanner'
+                }
             }
         }
 
