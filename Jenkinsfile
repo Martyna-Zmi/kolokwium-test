@@ -45,7 +45,7 @@ pipeline {
                         -Dsonar.projectKey=kolokwium-api \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.login=$SONARQUBE_TOKEN
+                        -Dsonar.login=$SONAR_TOKEN
                         """
                     }
             }
