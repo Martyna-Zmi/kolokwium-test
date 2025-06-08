@@ -1,14 +1,14 @@
 pipeline {
     agent {
         docker {
-            image 'martyna0901/custom-jenkins-build-agent:1.0.1'
+            image 'martyna0901/custom-jenkins-build-agent:1.0.2'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-id')
-        IMAGE_NAME = "martyna0901/express-api"
+        IMAGE_NAME = "martyna0901/kolokwium-api"
     }
 
     stages {
@@ -40,9 +40,9 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                         npm install
+                        npm install
                         sonar-scanner \
-                        -Dsonar.projectKey=express-api \
+                        -Dsonar.projectKey=kolokwium-api \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.login=$SONARQUBE_TOKEN
