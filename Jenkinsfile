@@ -15,6 +15,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    env.BRANCH_NAME = sh(
+                        script: "git name-rev --name-only HEAD",
+                        returnStdout: true
+                    ).trim()
+                    echo "Gałąź wykryta: ${env.BRANCH_NAME}"
+                }
             }
         }
 
