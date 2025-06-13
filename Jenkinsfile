@@ -32,7 +32,6 @@ pipeline {
             parallel {
                 stage('Unit Tests') {
                     steps {
-                        sh 'npm install'
                         sh 'npm run test --coverage'
                     }
                 }
