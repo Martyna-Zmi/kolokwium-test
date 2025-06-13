@@ -17,26 +17,27 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Install') {
           steps {
             sh 'npm ci'
           }
         }
-        stage('Lint') {
-          steps {
-            sh 'npm run lint'
-          }
-        }
 
-        stage('Tests & Coverage') {
-            parallel {
-                stage('Unit Tests') {
-                    steps {
-                        sh 'npm run test --coverage'
-                    }
+    stage('Lint & Tests') {
+        parallel {
+            stage('Lint') {
+                steps {
+                    sh 'npm run lint'
+                }
+            }
+            stage('Unit Tests') {
+                steps {
+                    sh 'npm run test --coverage'
                 }
             }
         }
+    }
 
         stage('Archive Artifacts') {
             steps {
