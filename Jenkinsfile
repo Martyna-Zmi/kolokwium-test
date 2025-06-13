@@ -17,10 +17,10 @@ pipeline {
                 checkout scm
                 script {
                     env.BRANCH_NAME = sh(
-                        script: "git rev-parse --abbrev-ref HEAD",
+                        script: "git name-rev --name-only HEAD",
                         returnStdout: true
                     ).trim()
-                    echo "Wydedukowana gałąź: ${env.BRANCH_NAME}"
+                    echo "Gałąź wykryta przez name-rev: ${env.BRANCH_NAME}"
                 }
             }
         }
