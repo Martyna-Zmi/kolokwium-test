@@ -79,10 +79,18 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up...'
-            sh "docker rmi ${env.IMAGE_NAME}:${env.BUILD_NUMBER} || true"
-            sh "docker rmi ${env.IMAGE_NAME}:latest || true"
-            echo 'Build completed.'
+            script{
+                echo 'Cleaning up...'
+                    sh "docker rmi ${env.IMAGE_NAME}:${env.BUILD_NUMBER} || true"
+                    sh "docker rmi ${env.IMAGE_NAME}:latest || true"
+                    echo 'Build completed.'
+                    writeFile file: 'raport.txt', text: """
+                              Pipeline run: ${env.BUILD_NUMBER}
+                              Branch: ${env.BRANCH_NAME ?: 'N/A'}
+                              Finished at: ${new Date().format("yyyy-MM-dd HH:mm:ss")}
+                            """
+                    archiveArtifacts artifacts: 'raport.txt'
+             }
         }
         success {
             echo 'Build & deploy completed successfully.'
