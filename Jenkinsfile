@@ -17,18 +17,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Ustal gałąź') {
-            steps {
-                script {
-                    def rawBranch = sh(
-                      script: "git name-rev --name-only HEAD",
-                        returnStdout: true
-                 ).trim()
-                env.BRANCH_NAME = rawBranch.replaceFirst(/~.*/, '').replaceFirst(/.*\//, '')
-                echo "Ostatecznie wykryta gałąź: ${env.BRANCH_NAME}"
-        }
-    }
-}
+
         stage('Install') {
           steps {
             sh 'npm ci'
@@ -75,9 +64,7 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             when {
-                expression {
-                    return env.BRANCH_NAME == 'master'
-                }
+                branch 'remotes/origin/master'
             }
             steps {
                 script {
