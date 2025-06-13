@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Lint') {
+          steps {
+            sh 'npm run lint'
+          }
+        }
+
         stage('Tests & Coverage') {
             parallel {
                 stage('Unit Tests') {
