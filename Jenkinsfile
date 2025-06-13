@@ -49,7 +49,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner'
+                    sh 'sonar-scanner -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info'
                 }
             }
         }
