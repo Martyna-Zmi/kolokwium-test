@@ -15,16 +15,20 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                script {
-                    env.BRANCH_NAME = sh(
-                        script: "git name-rev --name-only HEAD",
-                        returnStdout: true
-                    ).trim()
-                    echo "Gałąź wykryta: ${env.BRANCH_NAME}"
-                }
             }
         }
-
+        stage('Ustal gałąź') {
+            steps {
+                script {
+                    def rawBranch = sh(
+                      script: "git name-rev --name-only HEAD",
+                        returnStdout: true
+                 ).trim()
+                env.BRANCH_NAME = rawBranch.replaceFirst(/~.*/, '').replaceFirst(/.*\//, '')
+                echo "Ostatecznie wykryta gałąź: ${env.BRANCH_NAME}"
+        }
+    }
+}
         stage('Install') {
           steps {
             sh 'npm ci'
@@ -71,7 +75,9 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             when {
-                branch 'remotes/origin/master'
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
             }
             steps {
                 script {
