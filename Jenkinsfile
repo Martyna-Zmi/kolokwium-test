@@ -15,6 +15,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    env.BRANCH_NAME = sh(
+                        script: "git rev-parse --abbrev-ref HEAD",
+                        returnStdout: true
+                    ).trim()
+                    echo "Wydedukowana gałąź: ${env.BRANCH_NAME}"
+                }
             }
         }
 
@@ -60,11 +67,6 @@ pipeline {
                         docker build -t ${env.IMAGE_NAME}:${env.BUILD_NUMBER} -t ${env.IMAGE_NAME}:latest .
                     """
                 }
-            }
-        }
-        stage('Debug Branch') {
-            steps {
-                echo "Aktualna gałąź: ${env.BRANCH_NAME}"
             }
         }
         stage('Push to Docker Hub') {
