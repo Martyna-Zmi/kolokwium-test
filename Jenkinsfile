@@ -31,13 +31,13 @@ pipeline {
                        sh 'npm run lint'
                     }
              }
-                stage('Unit Tests') {
+             stage('Unit Tests') {
                     steps {
                     sh 'npm run test --coverage'
                     }
-                }
             }
         }
+    }
 
         stage('Archive Artifacts') {
             steps {
@@ -63,23 +63,18 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Hub') {
-            when {
-                branch 'master'
-            }
+        stage('Push App Image to Docker Hub') {
             steps {
                 script {
-                    def userInput = input(id: 'Proceed1', message: 'Czy chcesz wdrozyc na produkcje?', ok: 'Tak, chce')
-                    if (userInput) {
-                        sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                        sh """
+                    sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
+                    sh """
                         docker push ${env.IMAGE_NAME}:${env.BUILD_NUMBER}
                         docker push ${env.IMAGE_NAME}:latest
                     """
-                    }
                 }
             }
         }
+    }
 
     post {
         always {
