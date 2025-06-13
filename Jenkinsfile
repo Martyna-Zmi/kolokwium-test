@@ -62,7 +62,11 @@ pipeline {
                 }
             }
         }
-
+        stage('Debug Branch') {
+            steps {
+                echo "Aktualna gałąź: ${env.BRANCH_NAME}"
+            }
+        }
         stage('Push to Docker Hub') {
             when {
                 branch 'master'
