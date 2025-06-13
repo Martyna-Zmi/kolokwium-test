@@ -17,7 +17,11 @@ pipeline {
                 checkout scm
             }
         }
-
+        stage('Install') {
+          steps {
+            sh 'npm ci'
+          }
+        }
         stage('Lint') {
           steps {
             sh 'npm run lint'
