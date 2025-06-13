@@ -52,6 +52,7 @@ pipeline {
                 junit 'reports/**/*.xml'
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -68,6 +69,18 @@ pipeline {
                     """
                 }
             }
+        }
+
+        stage('Save Docker Image') {
+            steps {
+                script {
+                    sh """
+                     docker save -o kolokwium-api_${env.BUILD_NUMBER}.tar ${env.IMAGE_NAME}:${env.BUILD_NUMBER}
+                    """
+                    archiveArtifacts artifacts: "kolokwium-api_${env.BUILD_NUMBER}.tar", fingerprint: true
+                }
+            }
+
         }
         stage('Push to Docker Hub') {
             when {
