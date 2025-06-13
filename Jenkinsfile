@@ -24,20 +24,20 @@ pipeline {
           }
         }
 
-    stage('Lint & Tests') {
-        parallel {
-            stage('Lint') {
-                steps {
-                    sh 'npm run lint'
-                }
-            }
-            stage('Unit Tests') {
-                steps {
+        stage('Lint & Tests') {
+            parallel {
+                stage('Lint') {
+                 steps {
+                       sh 'npm run lint'
+                    }
+             }
+                stage('Unit Tests') {
+                    steps {
                     sh 'npm run test --coverage'
+                    }
                 }
             }
         }
-    }
 
         stage('Archive Artifacts') {
             steps {
@@ -45,7 +45,6 @@ pipeline {
                 junit 'reports/**/*.xml'
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -64,18 +63,23 @@ pipeline {
             }
         }
 
-        stage('Push App Image to Docker Hub') {
+        stage('Push to Docker Hub') {
+            when {
+                branch 'master'
+            }
             steps {
                 script {
-                    sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                    sh """
+                    def userInput = input(id: 'Proceed1', message: 'Czy chcesz wdrozyc na produkcje?', ok: 'Tak, chce')
+                    if (userInput) {
+                        sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
+                        sh """
                         docker push ${env.IMAGE_NAME}:${env.BUILD_NUMBER}
                         docker push ${env.IMAGE_NAME}:latest
                     """
+                    }
                 }
             }
         }
-    }
 
     post {
         always {
