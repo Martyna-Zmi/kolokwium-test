@@ -20,7 +20,7 @@ pipeline {
                         script: "git name-rev --name-only HEAD",
                         returnStdout: true
                     ).trim()
-                    echo "Gałąź wykryta przez name-rev: ${env.BRANCH_NAME}"
+                    echo "Gałąź wykryta: ${env.BRANCH_NAME}"
                 }
             }
         }
@@ -71,7 +71,7 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             when {
-                branch 'master'
+                branch 'remotes/origin/master'
             }
             steps {
                 script {
